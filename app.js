@@ -10,6 +10,9 @@ var users = require('./routes/users');
 
 var app = express();
 
+// it would make this API far more scalable to store the values in a database
+// an array is fast at first, then performance degrades.
+// connecting to Mongo using Mongoose would be a solution
 // simple in-memory usage store
 var usages = [];
 app.usages = usages;
