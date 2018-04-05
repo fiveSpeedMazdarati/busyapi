@@ -1,0 +1,34 @@
+Log File
+
+* With more than two hours I think I could have done a much better job of learning the stack and trying to solve the problem
+
+- First off, I gave myself a crash course in the MEAN stack. What do each of these parts do? I've never worked with these things before so it was time to learn a little.
+-	Visiting the sites of each of the piece of the stack made it all a little more clear
+	A quick overview from a guy on YouTube also helped clarify what's going on
+
+- try to make sense of the app does overall, get the lay of the land
+
+-	it looks like /app.js, /bin/www, and /routes/api/usages.js are the interesting files here. The rest looks like setup and other stuff needed for the framework
+
+-	there are lots of require() statements, so there must be more than meets the eye. Other modules in the framework? - it turns out that that is indeed the answer, but they're part of Node, not Express.
+	
+- Then I tried to get the thing to run on my local machine. I actually never got the web server portion to work. executing $ node app works, but when I'd check at localhost:3000 I would get an error message. This is probably due to something on my own computer. I'm sure that after I send this over to you guys I'll try to figure out what was wrong. You can't just throw this fancy new thing in front of me and expect me to leave it alone!
+
+
+- Impressions on how to make this scale to 1M hits per minute (I made some of these same notes in the existing code)
+
+- 	storing data in a simple array might be fast at first, but performance degrades pretty quickly, especially if the data needs to be sorted. A database would be better. Mongo makes sense since it's part of the stack.
+
+-	Is there a way to do more than one thread? More than one Node? That would increase throughput a lot, especially if the number of threads can grow with the traffic to the API.
+	- it turns out that there is! Node was made for this sort of thing, but needs a component not currently in use in this app. From what I found, there is a module called "Cluster" that should be able to tell us how many cores are available and kick off the threads.
+	- in addition, a server with a bunch more cores would allow more child processes to spin up and increase throughput.
+	
+	- I'm not completely sure how to integrate it in the current app, but based on some things I found online, I did create a small file called cluster.js which uses the cluster module and starts a thread for each core available. It does tell me the proper number of cores on my local machine, so I figure it would do the same on a larger cluster. I don't know how exactly to assign this app to run on each new fork, but I imagine that Node has a way to handle that. With more time I think I could make this work.
+	
+-Changes to the stack? Mongo, Node, Express all seem like they would support this.
+-Changes to the hardware or architecture? More cores and a load balancer would help field all of the requests.
+
+-How to measure if we've accomplished the goal or not? I'm aware of Apache's benchmarking tool, but I'm not certain if that requires the Apache web server or not. 
+
+	
+	
